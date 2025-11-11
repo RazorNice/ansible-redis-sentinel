@@ -109,6 +109,7 @@
     dest: /etc/redis/sentinel_{{ redis_sentinel_port }}.conf
     owner: "{{ redis_user }}"
     mode: 0640
+    force: no
   notify: "restart sentinel"
 
 - name: add sentinel init config file

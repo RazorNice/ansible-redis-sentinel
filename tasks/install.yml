@@ -74,3 +74,45 @@
     link: "/usr/bin/{{ item }}"
   with_items: "{{ redis_binaries.stdout_lines }}"
   when: redis_binaries is succeeded
+
+# ---- MULTI-INSTANCE REDIS CONFIGURATION ----
+
+- name: Create redis instance directories
+  file:
+    path: "{{ item.dir }}"
+    state: directory
+    owner: "{{ redis_user }}"
+    group: "{{ redis_group }}"
+    mode: 0755
+  loop: "{{ redis_instances }}"
+
+- name: Create Redis log directory
+  file:
+    path: /var/log/redis
+    state: directory
+    owner: "{{ redis_user }}"
+    group: "{{ redis_group }}"
+    mode: 0755
+
+- name: Create log files for Redis instances
+  file:
+    path: "/var/log/redis/{{ item.port }}.log"
+    state: touch
+    owner: "{{ redis_user }}"
+    group: "{{ redis_group }}"
+    mode: 0644
+  loop: "{{ redis_instances }}"
+
+- name: Deploy redis.conf per instance
+  template:
+    src: redis.conf.j2
+    dest: "/etc/redis/redis-{{ item.port }}.conf"
+    owner: "{{ redis_user }}"
+    group: "{{ redis_group }}"
+    mode: 0644
+  loop: "{{ redis_instances }}"
+  vars:
+    redis_port: "{{ item.port }}"
+    redis_dir: "{{ item.dir }}"
+    redis_pidfile: "/var/run/redis-{{ item.port }}.pid"
+    redis_logfile: "/var/log/redis/{{ item.port }}.log"

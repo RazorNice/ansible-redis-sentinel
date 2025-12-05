@@ -22,6 +22,8 @@
     - install
 
 - include_tasks: systemd.yml
+  tags:
+    - config
 
 - include_tasks: server.yml
   when: not redis_sentinel

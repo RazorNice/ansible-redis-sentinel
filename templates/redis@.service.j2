@@ -7,7 +7,7 @@ Type=simple
 User=redis
 Group=redis
 ExecStart={{ redis_bin }} {{ redis_conf_dir }}/redis-%i.conf
-PIDFile=/var/run/redis-%i.pid
+PIDFile=/run/redis-%i.pid
 RuntimeDirectory=redis-%i
 
 Restart=on-failure

@@ -5,6 +5,8 @@
     owner: root
     group: root
     mode: 0644
+  when: redis_as_service | bool
+  notify: reload systemd
 
 - name: Reload systemd
   systemd:

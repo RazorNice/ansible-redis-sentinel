@@ -21,6 +21,8 @@
   tags:
     - install
 
+- include_tasks: instances.yml
+
 - include_tasks: systemd.yml
   tags:
     - config
